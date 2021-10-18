@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" name="" id="searcharticle">
+    <button onclick="sendit()">Search</button>
+    <div id="articles"></div>
+</body>
+
+</html>
+
+<script>
+    let article = document.getElementById("articles");
+    var carti = JSON.parse(localStorage.getItem("cart"));
+    console.log("carti ", carti)
+    searcharticle()
+
+    async function searcharticle() {
+
+        let res = await
+        fetch(
+            `http://newsapi.org/v2/everything?q=${carti[carti.length - 1]}&from=2021-10-18&sortBy=popularity&apiKey=2d723640d2d4440085d0f1dd9bade5a9`)
+        let data = await res.json();
+        console.log(data)
+        appendarticles(data.articles)
+        carti.pop()
+    }
+
+    function appendarticles(data) {
+        article.innerHTML = null
+        data.forEach(articles => {
+
+            let maindiv = document.createElement("div")
+            maindiv.style.display = "flex"
+            let div = document.createElement("div");
+
+            let img = document.createElement("img")
+            img.src = articles.urlToImage
+            img.style.width = "300px";
+            img.style.height = "200px"
+            div.append(img)
+            let div1 = document.createElement("div");
+            let title = document.createElement("h2")
+
+            title.textContent = articles.title;
+            let descrip = document.createElement("p")
+            descrip.textContent = articles.description
+            maindiv.width = "600px"
+            div1.append(title, descrip)
+            div1.onclick = "urlchange()"
+            maindiv.append(div, div1)
+
+            article.append(maindiv)
+
+
+        })
+    }
+
+    async function sendit() {
+        var query = document.getElementById("searcharticle").value;
+
+        let res = await fetch(`http://newsapi.org/v2/everything?q=${query}&from=2021-10-18&sortBy=popularity&apiKey=2d723640d2d4440085d0f1dd9bade5a9`)
+        let data = await res.json();
+       console.log("new" ,data)
+        appendarticles1(data.articles)
+    }
+
+    function appendarticles1(data) {
+        article.innerHTML = null
+        data.forEach(articles => {
+
+            let maindiv = document.createElement("div")
+            maindiv.style.display = "flex"
+            let div = document.createElement("div");
+
+            let img = document.createElement("img")
+            img.src = articles.urlToImage
+            img.style.width = "300px";
+            img.style.height = "200px"
+            div.append(img)
+            let div1 = document.createElement("div");
+            let title = document.createElement("h2")
+
+            title.textContent = articles.title;
+            let descrip = document.createElement("p")
+            descrip.textContent = articles.description
+            maindiv.width = "600px"
+            div1.append(title, descrip)
+           
+            maindiv.append(div, div1)
+
+            article.append(maindiv)
+
+        })
+    }
+</script>

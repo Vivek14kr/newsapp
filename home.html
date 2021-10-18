@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body onload="showheadlines()">
+  <input type="text" name="" id="searcharticle">
+    <button onclick="send()">Search</button>
+    <div id="articles"></div>
+</body>
+</html>
+<script>
+  function showheadlines(){
+    
+     fetch('http://newsapi.org/v2/top-headlines?country=in&apiKey=2d723640d2d4440085d0f1dd9bade5a9').then((res) => {
+          return res.json();
+        }).then((data)=>{
+            console.log(data.articles)
+        appendarticles(data.articles)
+       
+        })
+
+  }
+  let article = document.getElementById("articles")
+  function appendarticles(data){
+   data.forEach(articles => {
+     console.log(articles)
+     var maindiv = document.createElement("div")
+     maindiv.style.display = "flex"
+     var div = document.createElement("div");
+
+     var img = document.createElement("img")
+     img.src = articles.urlToImage
+     img.style.width = "300px";
+     img.style.height = "200px"
+     div.append(img)
+     var div1 = document.createElement("div");
+     var title = document.createElement("h2")
+
+     title.textContent = articles.title;
+     var descrip = document.createElement("p")
+     var articless = articles.content
+     descrip.textContent = articles.description
+     maindiv.width = "600px"
+     div1.append(title, descrip)
+     maindiv.addEventListener("click", urlchange)
+     maindiv.append(div, div1)
+     maindiv.style.marginTop = "30px"
+     article.append(maindiv)
+function urlchange(){
+      if (localStorage.getItem("cartoon") === null){
+      localStorage.setItem("cartoon", JSON.stringify([]));
+      }
+      
+      addtocart(title, articless)
+
+      window.location.href = "new.html"
+      function addtocart(title, articless){
+      let products_cart = JSON.parse(localStorage.getItem("cartoon"));
+   
+      products_cart.push(title.textContent, articless)
+  
+      localStorage.setItem("cartoon", JSON.stringify(products_cart))
+      }
+}
+   })
+  }
+
+  function send(){
+    if (localStorage.getItem("cart") === null){
+      localStorage.setItem("cart", JSON.stringify([]));
+    }
+    var query = document.getElementById("searcharticle").value;
+    addtocart(query)
+
+    window.location.href = "search.html"
+    function addtocart(query){
+      let products_cart = JSON.parse(localStorage.getItem("cart"));
+      products_cart.push(query)
+      localStorage.setItem("cart", JSON.stringify(products_cart))
+    }
+  }
+
+ 
+</script>
